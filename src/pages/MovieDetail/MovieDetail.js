@@ -21,6 +21,7 @@ import axios from 'axios';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useIsFocused } from '@react-navigation/native';
 import styles from './styles';
+import CircularProgress from "../../components/CircularProgress";
 
 const deviceHeight = Dimensions.get("window").height;
 
@@ -215,11 +216,11 @@ function MovieDetail(props) {
                     </View>
                 </View>
                 <View style={styles.movieInfoContainer}>
-                    <View style={{ justifyContent: 'center' }}>
+                    <View style={{ justifyContent: 'center',height:100,width:300 }}>
                         <Text style={styles.movieName}>{props.route.params.item[0].name}</Text>
                         <Text style={styles.movieStat}>{props.route.params.item[0].stat}</Text>
                     </View>
-                    <View
+                    {/* <View
                         style={[
                             styles.ratingBadge,
                             {
@@ -235,6 +236,9 @@ function MovieDetail(props) {
                         >
                             {props.route.params.item[0].vote_average * 100 /10}%
                         </Text>
+                    </View> */}
+                     <View>
+                        <CircularProgress percent={props.route.params.item[0].vote_average * 100 /10}/>
                     </View>
 
                 </View>

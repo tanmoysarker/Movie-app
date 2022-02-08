@@ -7,7 +7,6 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "./Home/Home";
 import Favorite from "./Favourite/Favourite";
-import Genre from "./Genre/Genre";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ThemeContext } from "../contexts/ThemeContext";
 const Tab = createBottomTabNavigator();
@@ -43,7 +42,7 @@ class MainRoot extends Component {
                     return (
                         <Tab.Navigator
                             screenOptions={{
-                                tabBarActiveTintColor: isDarkMode ? "#E50914" : "#FFF",
+                                tabBarActiveTintColor: isDarkMode ? "#00D080" : "#FFF",
                                 tabBarInactiveTintColor: "#999",
                                 keyboardHidesTabBar: true,
                                 labelStyle: { fontFamily: "poppins-r" },

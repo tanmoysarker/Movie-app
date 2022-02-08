@@ -18,6 +18,7 @@ import { Apis } from '../../constant/Api'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import CircularProgress from "../../components/CircularProgress";
 import styles from './styles.js';
 
 
@@ -106,7 +107,8 @@ function Home(props) {
                             uri: item.image !== null ? item.image : null,
                             name: item.title,
                             stat: item.released,
-                            desc: item.desc
+                            desc: item.desc,
+                            rating: item.vote_average
                         })
                     }
                     }
@@ -353,7 +355,7 @@ function Home(props) {
                             <MaterialCommunityIcons
                                 style={{ marginRight: 5 }}
                                 name="movie"
-                                color={'#E50914'}
+                                color={'#00D080'}
                                 size={30}
                             />
                             <Text
@@ -381,7 +383,7 @@ function Home(props) {
                             >
                                 <MaterialCommunityIcons
                                     name={iconName}
-                                    color={'#E50914'}
+                                    color={'#00D080'}
                                     size={26}
                                 />
                             </TouchableWithoutFeedback>
@@ -479,7 +481,8 @@ function Home(props) {
                             uri: item.image !== null ? item.image : null,
                             name: item.title,
                             stat: item.released,
-                            desc: item.desc
+                            desc: item.desc,
+                            rating: item.vote_average
                         })}
                     />
 
@@ -488,8 +491,14 @@ function Home(props) {
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={styles.movieName}>{background.name}</Text>
                         <Text style={styles.movieStat}>{background.stat}</Text>
+                       
+                    </View>
+                    <View>
+                        <CircularProgress percent={Math.floor(background.rating * 100  /10)}/>
                     </View>
                 </View>
+
+                
 
                 <Text style={styles.titleText}>Popular Movies</Text>
 
