@@ -15,7 +15,7 @@ const leftPosition = (posterWidth - 24) / 2;
 
 
 function TrailerItem(props) {
-  
+
   const marginValue = props.itemIndex % 2 == 0 ? 10 : 0;
   const thumbnail =
     "https://img.youtube.com/vi/" + props.data.key + "/hqdefault.jpg";
@@ -54,13 +54,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: 24,
     height: 24,
-  
+
   },
   posterImage: {
-      width: posterWidth,
-      height: 100,
-      borderRadius: 20,
-      marginBottom: 5,
+    width: posterWidth,
+    height: 100,
+    borderRadius: 20,
+    marginBottom: 5,
   },
   name: {
     width: posterWidth,

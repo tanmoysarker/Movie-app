@@ -83,6 +83,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', 
         marginLeft: 20, 
         marginTop: 20 
+    },
+    btnView: {
+        backgroundColor: "#222",
+        width: 48,
+        height: 48,
+        position: "absolute",
+        top: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        left: 20,
+        borderRadius: 10,
     }
 });
 

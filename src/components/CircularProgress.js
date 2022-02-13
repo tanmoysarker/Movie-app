@@ -225,8 +225,7 @@ CircularProgress.defaultProps = {
 };
 
 /**
- * offsetLayer has transform:[{rotateZ: '-135deg'}] since
- * the offsetLayer rotation is fixed by us.
+ * offsetLayer has transform:[{rotateZ: '-135deg'}]
  **/
 const styles = StyleSheet.create({
   container: {

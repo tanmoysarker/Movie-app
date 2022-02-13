@@ -43,11 +43,24 @@
     "@react-native-community/eslint-config": "^3.0.1",
     "babel-jest": "^27.4.5",
     "eslint": "^8.5.0",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.0",
+    "jest-transform-stub": "^2.0.0",
     "metro-react-native-babel-preset": "^0.66.2",
     "react-test-renderer": "17.0.2"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": [
+      "./node_modules/react-native-gesture-handler/jestSetup.js",
+      "<rootDir>/__tests__/App-test.js"
+    ],
+    "moduleNameMapper": {
+      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "transform": {
+      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
+    }
   }
 }

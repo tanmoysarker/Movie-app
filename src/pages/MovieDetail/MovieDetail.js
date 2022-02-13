@@ -22,8 +22,9 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useIsFocused } from '@react-navigation/native';
 import styles from './styles';
 import CircularProgress from "../../components/CircularProgress";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const deviceHeight = Dimensions.get("window").height;
+const dummyImage = "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg";
 
 function MovieDetail(props) {
     const isFocused = useIsFocused();
@@ -32,11 +33,9 @@ function MovieDetail(props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [activeMovieTrailerKey, setActiveMovieTrailerKey] = useState('');
 
-    console.log('Detail Data',props)
-
     useEffect(() => {
         handleList();
-      },[isFocused]);
+    }, [isFocused]);
 
     const handleList = async () => {
         try {
@@ -44,14 +43,13 @@ function MovieDetail(props) {
             const result = await axios.get(
                 `${Apis.baseUrl}` + `${props.route.params.item[0].id}` + `/similar?${Apis.api}`
             );
-              console.log('detail data>>>', `${Apis.baseUrl}` + `${props.route.params.item[0].id}` + `?${Apis.api}`);
             result.data.results.forEach((movie) => {
                 listData.push({
                     id: movie.id,
                     title: movie.title,
                     image:
                         movie.poster_path == null
-                            ? "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg"
+                            ? dummyImage
                             : "http://image.tmdb.org/t/p/w342/" + movie.poster_path,
                     backdrop_path:
                         "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
@@ -65,7 +63,6 @@ function MovieDetail(props) {
                 })
             });
             setList(listData);
-            // console.log('Result data>>>2', list);
         } catch (err) {
             console.log(err.message || "Unexpected Error!");
         }
@@ -83,14 +80,13 @@ function MovieDetail(props) {
             const trailerResult = await axios.get(
                 `${Apis.baseUrl}` + item.id + `/videos?${Apis.api}`
             );
-            console.log('Result data>>>', trailerResult);
             var movie = movieResult.data;
             movieData.push({
                 id: movie.id,
                 name: movie.title,
                 uri:
                     movie.poster_path == null
-                        ? "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg"
+                        ? dummyImage
                         : "http://image.tmdb.org/t/p/w342/" + movie.poster_path,
                 backdrop_path:
                     "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
@@ -106,9 +102,6 @@ function MovieDetail(props) {
                 crew: creditResult.data.crew,
                 results: trailerResult.data.results
             });
-
-            // setMovieDetail(movieData);
-            console.log('Result data>>>2', movieData);
             props.navigation.navigate("MovieDetail", { item: movieData });
 
         } catch (err) {
@@ -117,34 +110,31 @@ function MovieDetail(props) {
     }
 
     const saveFavourite = async (item) => {
-        //AsyncStorage.clear();
         const value = await AsyncStorage.getItem('fav');
-        console.log('val', JSON.parse(value));
         var newArrItem = [];
-        
-        console.log('Get Item', newArrItem);
 
-        if(JSON.parse(value) !== null){
+
+        if (JSON.parse(value) !== null) {
             var match = JSON.parse(value).find(element => element.id === item.id);
-            
+
         }
-        console.log('Pressed Item1', match);
-        if (match === undefined){
+
+        if (match === undefined) {
             newArrItem.push(item);
         }
         var concatFav = newArrItem.concat(JSON.parse(value));
 
         var finalFav = concatFav.filter((element) => {
-            return element !== null ;
+            return element !== null;
         })
-        
+
         AsyncStorage.setItem('fav', JSON.stringify(finalFav));
     }
 
     return (
         <ScrollView>
             <ImageBackground
-                source={{ uri: props.route.params.item[0].uri}}
+                source={{ uri: props.route.params.item[0].uri }}
                 style={styles.imagebg}
                 blurRadius={10}>
 
@@ -173,17 +163,7 @@ function MovieDetail(props) {
                             onPress={() => setModalVisible(false)}
                         >
                             <View
-                                style={{
-                                    backgroundColor: "#222",
-                                    width: 48,
-                                    height: 48,
-                                    position: "absolute",
-                                    top: 10,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    left: 20,
-                                    borderRadius: 10,
-                                }}
+                                style={styles.btnView}
                             >
                                 <MaterialCommunityIcons
                                     name="close"
@@ -212,33 +192,15 @@ function MovieDetail(props) {
                                 uri: props.route.params.item[0].uri,
                             }}
                         />
-                        {/* <Text style={styles.allListText}>Avengers</Text> */}
                     </View>
                 </View>
                 <View style={styles.movieInfoContainer}>
-                    <View style={{ justifyContent: 'center',height:100,width:300 }}>
+                    <View style={{ justifyContent: 'center', height: 100, width: 300 }}>
                         <Text style={styles.movieName}>{props.route.params.item[0].name}</Text>
                         <Text style={styles.movieStat}>{props.route.params.item[0].stat}</Text>
                     </View>
-                    {/* <View
-                        style={[
-                            styles.ratingBadge,
-                            {
-                                backgroundColor: '#000',
-                            },
-                        ]}
-                    >
-                        <Text
-                            style={[
-                                styles.rating,
-                                { color: '#fff' },
-                            ]}
-                        >
-                            {props.route.params.item[0].vote_average * 100 /10}%
-                        </Text>
-                    </View> */}
-                     <View>
-                        <CircularProgress percent={props.route.params.item[0].vote_average * 100 /10}/>
+                    <View>
+                        <CircularProgress percent={props.route.params.item[0].vote_average * 100 / 10} />
                     </View>
 
                 </View>
@@ -248,16 +210,16 @@ function MovieDetail(props) {
                     </Text>
                 </View>
 
-                <View style={{ flexWrap: "wrap", flexDirection: "row", paddingHorizontal: 20, marginBottom:20 }}>
+                <View style={{ flexWrap: "wrap", flexDirection: "row", paddingHorizontal: 20, marginBottom: 20 }}>
                     {props.route.params.item[0].results.map((item, index) => {
                         return (
                             <TrailerItem
                                 poster={props.route.params.item.uri}
                                 key={index}
-                                  onPressFunction={() => {
-                                      setModalVisible(true);
-                                      setActiveMovieTrailerKey(item.key);
-                                  }}
+                                onPressFunction={() => {
+                                    setModalVisible(true);
+                                    setActiveMovieTrailerKey(item.key);
+                                }}
                                 data={item}
                                 modalVisible={modalVisible}
                                 itemIndex={index}

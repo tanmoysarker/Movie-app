@@ -10,7 +10,9 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 function MovieItem(props) {
+
   const navigation = useNavigation();
+  
   return (
     <TouchableWithoutFeedback
       onPress={() => {

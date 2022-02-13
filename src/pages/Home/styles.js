@@ -113,7 +113,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginLeft: 20,
         marginTop: 20
-    }
+    },
+    rightButtonContainerStyle: {
+        borderRadius: 25,
+        right: 8,
+        height: 30,
+        top: 10,
+        alignSelfs: "center",
+        backgroundColor: "#383b42"
+    },
 });
 
 export default styles;

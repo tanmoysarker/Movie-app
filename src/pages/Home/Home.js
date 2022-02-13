@@ -21,9 +21,8 @@ import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import CircularProgress from "../../components/CircularProgress";
 import styles from './styles.js';
 
-
-
 const deviceWidth = Dimensions.get("window").width;
+const dummyImage = "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg";
 
 function Home(props) {
     const searchRef = useRef(null)
@@ -38,6 +37,7 @@ function Home(props) {
     const [posts, setPosts] = useState(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
 
     const [background, setBackground] = useState({
@@ -114,7 +114,6 @@ function Home(props) {
                     }
                 >
                     <Image source={{ uri: item.image !== null ? item.image : null }} style={styles.carouselImage} />
-                    {/* <Text style={styles.carouselText}>{item.title}</Text> */}
                     <MaterialIcons name='library-add' size={30} color='white' style={styles.carouselIcon} onPress={() => saveFavourite(item)} />
                 </TouchableOpacity>
 
@@ -124,18 +123,15 @@ function Home(props) {
     }
 
     const saveFavourite = async (item) => {
-        //AsyncStorage.clear();
         const value = await AsyncStorage.getItem('fav');
-        console.log('val', JSON.parse(value));
         var newArrItem = [];
 
-        console.log('Get Item', newArrItem);
 
         if (JSON.parse(value) !== null) {
             var match = JSON.parse(value).find(element => element.id === item.id);
 
         }
-        console.log('Pressed Item1', match);
+
         if (match === undefined) {
             newArrItem.push(item);
         }
@@ -154,6 +150,7 @@ function Home(props) {
         handleTrendingList();
     }, []);
 
+
     const handleCarousels = async () => {
         setLoading(true);
         try {
@@ -161,14 +158,13 @@ function Home(props) {
             const result = await axios.get(
                 `${Apis.upcomingUrl}`
             );
-              console.log('Result data>>>', result.data.results);
             result.data.results.forEach((movie) => {
                 data.push({
                     id: movie.id,
                     title: movie.title,
                     image:
                         movie.poster_path == null
-                            ? "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg"
+                            ? dummyImage
                             : "http://image.tmdb.org/t/p/w342/" + movie.poster_path,
                     backdrop_path:
                         "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
@@ -203,7 +199,7 @@ function Home(props) {
                     title: movie.title,
                     image:
                         movie.poster_path == null
-                            ? "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg"
+                            ? dummyImage
                             : "http://image.tmdb.org/t/p/w342/" + movie.poster_path,
                     backdrop_path:
                         "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
@@ -237,7 +233,7 @@ function Home(props) {
                     title: movie.title,
                     image:
                         movie.poster_path == null
-                            ? "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg"
+                            ? dummyImage
                             : "http://image.tmdb.org/t/p/w342/" + movie.poster_path,
                     backdrop_path:
                         "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
@@ -271,7 +267,7 @@ function Home(props) {
                     title: movie.title,
                     image:
                         movie.poster_path == null
-                            ? "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg"
+                            ? dummyImage
                             : "http://image.tmdb.org/t/p/w342/" + movie.poster_path,
                     backdrop_path:
                         "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
@@ -310,7 +306,7 @@ function Home(props) {
                 name: movie.title,
                 uri:
                     movie.poster_path == null
-                        ? "https://lightning.od-cdn.com/25.2.6-build-2536-master/public/img/no-cover_en_US.jpg"
+                        ? dummyImage
                         : "http://image.tmdb.org/t/p/w342/" + movie.poster_path,
                 backdrop_path:
                     "http://image.tmdb.org/t/p/w500/" + movie.backdrop_path,
@@ -326,8 +322,6 @@ function Home(props) {
                 crew: creditResult.data.crew,
                 results: trailerResult.data.results
             });
-
-            // setMovieDetail(movieData);
             props.navigation.navigate("MovieDetail", { item: movieData });
 
         } catch (err) {
@@ -336,6 +330,8 @@ function Home(props) {
             setLoading(false);
         }
     }
+
+
 
     return (
         <ScrollView style={styles.container}>
@@ -399,9 +395,6 @@ function Home(props) {
                         }}
                         dataSet={queryResult}
                         onChangeText={searchData}
-                        // onSelectItem={(item) => {
-                        //   item && setSelectedItem(item.id)
-                        // }}
                         debounce={600}
                         suggestionsListMaxHeight={Dimensions.get("window").height * 0.4}
                         loading={isAnimating}
@@ -417,14 +410,7 @@ function Home(props) {
                                 paddingLeft: 18
                             }
                         }}
-                        rightButtonsContainerStyle={{
-                            borderRadius: 25,
-                            right: 8,
-                            height: 30,
-                            top: 10,
-                            alignSelfs: "center",
-                            backgroundColor: "#383b42"
-                        }}
+                        rightButtonsContainerStyle={styles.rightButtonContainerStyle}
                         inputContainerStyle={{
                             backgroundColor: "transparent"
                         }}
@@ -456,7 +442,6 @@ function Home(props) {
                                     >
                                         <Text style={{ color: "#fff", padding: 15 }}>{item.title}</Text>
                                         <Text style={{ color: "#fff", padding: 15 }}>Rating: {item.vote_average}</Text>
-                                        {/* <Text style={{ color: "#fff", padding: 15 }}>{item.stat}</Text> */}
                                     </View>
                                 </View>
                             </TouchableWithoutFeedback>
@@ -477,7 +462,7 @@ function Home(props) {
                         separatorWidth={0}
                         ref={carouselRef}
                         inActiveOpacity={0.4}
-                        onScrollEnd={(item)=> setBackground({
+                        onScrollEnd={(item) => setBackground({
                             uri: item.image !== null ? item.image : null,
                             name: item.title,
                             stat: item.released,
@@ -491,14 +476,19 @@ function Home(props) {
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={styles.movieName}>{background.name}</Text>
                         <Text style={styles.movieStat}>{background.stat}</Text>
-                       
+
                     </View>
-                    <View>
-                        <CircularProgress percent={Math.floor(background.rating * 100  /10)}/>
-                    </View>
+                    {background.rating !== undefined ?
+                        <View>
+                            <CircularProgress percent={Math.floor(background.rating * 100 / 10)} />
+                        </View>
+                        :
+                        null
+                    }
+
                 </View>
 
-                
+
 
                 <Text style={styles.titleText}>Popular Movies</Text>
 
